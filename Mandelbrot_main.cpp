@@ -20,7 +20,12 @@ int main(int argc, char* argv[])
     SDL_Event e;
     int redraw = 1;
 
-    while (!quit) {
+    uint32_t last_update_time = SDL_GetTicks();
+    unsigned long long total_cycles = 0;
+    int frame_count = 0;
+
+    while (!quit) 
+    {
         while (SDL_PollEvent(&e)) 
         {
             if (e.type == SDL_QUIT) quit = 1;
@@ -53,17 +58,37 @@ int main(int argc, char* argv[])
             
             unsigned int aux; 
 
+            uint32_t start_time = SDL_GetTicks(); 
             unsigned long long t1 = __rdtsc(); 
+
             render_mandelbrot(pixels);
+
             unsigned long long t2 = __rdtscp(&aux); 
-
-            unsigned long long cycles = t2 - t1;
-
-            // Display in the window title how many milliseconds the frame took
-            char title[50];
-            snprintf(title, sizeof(title), "Mandelbrot - cycles: %llu", cycles);
+            uint32_t end_time = SDL_GetTicks();  
             
-            SDL_SetWindowTitle(window, title);
+            unsigned long long cycles = t2 - t1;
+            
+            // Display in the window title fps and number of processor cycles
+            unsigned long long current_cycles = t2 - t1;
+            total_cycles += current_cycles; // Накапливаем такты
+            frame_count++;
+
+            uint32_t current_time = SDL_GetTicks();
+            if (current_time - last_update_time >= 3000) // Прошло 3 секунды
+            {
+                unsigned long long avg_cycles = total_cycles / frame_count; // Среднее за 3 сек
+                
+                char title[100];
+                snprintf(title, sizeof(title), "Mandelbrot | Avg Cycles: %llu | FPS: %.1f", 
+                        avg_cycles, (double)frame_count / 3.0);
+                
+                SDL_SetWindowTitle(window, title);
+                
+                // Сбрасываем счетчики для следующего интервала
+                total_cycles = 0;
+                frame_count = 0;
+                last_update_time = current_time;
+            }
 
             // 3. "Отпираем". В этот момент данные ОДНИМ махом улетают в VRAM
             SDL_UnlockTexture(texture);
