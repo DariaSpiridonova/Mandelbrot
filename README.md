@@ -35,4 +35,37 @@ To run the program on Linux, write in the command line
 and enjoy
  ( ͡° ͜ʖ ͡°).
 
+## Comparison of FPS indicators of two versions of the program
+
+### 1. The primitive version without [optimization technologies](#optimization-technologies) 
+
+<p align="center">
+  <img src="fps_set.png" alt="Performance of the first version of the program">
+  <br>
+  <em>Performance of the <b>first version</b> of the program</em>
+</p>
+
+<p align="center">
+  <img src="cores_set.png" alt="Single-threaded distribution across CPU cores when running program 1">
+  <br>
+  <em><b>Single-threaded</b> execution of the Mandelbrot algorithm</em>
+</p>
+
+### 2. Final version with all [optimizations](#optimization-technologies)
+
+<p align="center">
+  <img src="fps_simd.png" alt="Performance of the final version of the program">
+  <br>
+  <em>Performance of the <b>final version</b> of the program</em>
+</p>
+
+<p align="center">
+  <img src="cores_simd.png" alt="Multi-threaded workload distribution across CPU cores when running program 2">
+  <br>
+  <em><b>Multi-threaded</b> execution of the Mandelbrot algorithm</em>
+</p>
+
+> The [htop](https://htop.dev/) program was used to monitor the load on each processor core in real time.
+
  
+### 🚀 As a result, we are seeing productivity gains of **more than 13 times!**
